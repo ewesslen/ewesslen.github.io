@@ -25,6 +25,14 @@ h1 {
     font-size: 1.5em;
     margin: 0 10px;
     text-decoration: none;
+    display: inline-block; /* Ensures transform properties work reliably */
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.social-icons a:hover,
+.social-icons a:focus {
+    color: #cccccc; /* Light gray for a subtle change */
+    transform: scale(1.2); /* Enlarge icon on hover/focus */
 }
 
 .footer {
