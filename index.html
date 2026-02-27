@@ -32,6 +32,26 @@
 
 <body>
   <h1>Coming 2026</h1>
+
+  <section class="projects">
+    <div class="project-row">
+      <span class="project-name">Geeqoid</span>
+      <span class="project-status">Coming Soon</span>
+    </div>
+    <div class="project-row">
+      <span class="project-name redacted-text" id="redacted-text">Redacted</span>
+      <span class="project-status">Coming Soon</span>
+    </div>
+    <div class="project-row">
+      <span class="project-name">Classified</span>
+      <span class="project-status">Coming Soon</span>
+    </div>
+    <div class="project-row">
+      <span class="project-name">Sport Shooting Depot</span>
+      <span class="project-status">Coming Soon</span>
+    </div>
+  </section>
+
   <div class="social-icons">
     <a href="https://www.instagram.com/ewesslen/" target="_blank"><i class="fa-brands fa-instagram"></i></a>
     <a href="https://www.linkedin.com/in/erikwesslen/" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
@@ -40,6 +60,29 @@
   <footer class="footer">
     © Erik Wesslen 2026
   </footer>
+  <script>
+    const el = document.getElementById('redacted-text');
+    const label = 'REDACTED';
+    const blockChars = '█▓▒░▄▀■';
+    const glitchChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*';
+
+    function rand(set) {
+      return set[Math.floor(Math.random() * set.length)];
+    }
+
+    function tick() {
+      let out = '';
+      for (let i = 0; i < label.length; i++) {
+        const r = Math.random();
+        if (r < 0.55) out += rand(blockChars);
+        else if (r < 0.75) out += rand(glitchChars);
+        else out += label[i];
+      }
+      el.textContent = out;
+    }
+
+    setInterval(tick, 90);
+  </script>
 </body>
 
 </html>
