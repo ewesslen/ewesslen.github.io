@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <script src="https://unpkg.com/@rive-app/canvas-lite"></script>
+  <script>const _t=localStorage.getItem('theme');if(_t)document.documentElement.setAttribute('data-theme',_t);</script>
 </head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-CF86TY03ND"></script>
@@ -61,6 +62,68 @@
   <footer class="footer">
     © Erik Wesslen 2026
   </footer>
+  <button id="theme-toggle" aria-label="Toggle theme">
+    <i id="theme-icon" class="fa-solid fa-moon"></i>
+  </button>
+
+  <script>
+    (function () {
+      var root = document.documentElement;
+
+      function getSystemTheme() {
+        return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      }
+
+      function getCurrentTheme() {
+        return root.getAttribute('data-theme') || getSystemTheme();
+      }
+
+      function updateIcon(theme) {
+        document.getElementById('theme-icon').className =
+          theme === 'dark' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
+      }
+
+      function switchTheme() {
+        var current = getCurrentTheme();
+        var next = current === 'dark' ? 'light' : 'dark';
+        var btn = document.getElementById('theme-toggle');
+        var icon = document.getElementById('theme-icon');
+        var rect = btn.getBoundingClientRect();
+        var x = Math.round(rect.left + rect.width / 2);
+        var y = Math.round(rect.top + rect.height / 2);
+        var newBg = next === 'light' ? '#f5f5f5' : '#000000';
+
+        var overlay = document.createElement('div');
+        overlay.style.cssText =
+          'position:fixed;inset:0;' +
+          'background:' + newBg + ';' +
+          'clip-path:circle(0px at ' + x + 'px ' + y + 'px);' +
+          'z-index:9998;pointer-events:none;' +
+          'transition:clip-path 0.55s cubic-bezier(0.4,0,0.2,1)';
+        document.body.appendChild(overlay);
+
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
+            overlay.style.clipPath = 'circle(150vmax at ' + x + 'px ' + y + 'px)';
+          });
+        });
+
+        icon.classList.add('spinning');
+
+        overlay.addEventListener('transitionend', function () {
+          root.setAttribute('data-theme', next);
+          updateIcon(next);
+          icon.classList.remove('spinning');
+          localStorage.setItem('theme', next);
+          overlay.remove();
+        }, { once: true });
+      }
+
+      updateIcon(getCurrentTheme());
+      document.getElementById('theme-toggle').addEventListener('click', switchTheme);
+    })();
+  </script>
+
   <script>
     const translations = {
       en: { greeting: "Greetings, I'm Erik!", comingSoon: "Coming Soon" },
