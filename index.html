@@ -91,32 +91,26 @@
         var rect = btn.getBoundingClientRect();
         var x = Math.round(rect.left + rect.width / 2);
         var y = Math.round(rect.top + rect.height / 2);
-        var newBg = next === 'light' ? '#f5f5f5' : '#000000';
 
-        var overlay = document.createElement('div');
-        overlay.style.cssText =
-          'position:fixed;inset:0;' +
-          'background:' + newBg + ';' +
-          'clip-path:circle(0px at ' + x + 'px ' + y + 'px);' +
-          'z-index:9998;pointer-events:none;' +
-          'transition:clip-path 0.55s cubic-bezier(0.4,0,0.2,1)';
-        document.body.appendChild(overlay);
-
-        requestAnimationFrame(function () {
-          requestAnimationFrame(function () {
-            overlay.style.clipPath = 'circle(150vmax at ' + x + 'px ' + y + 'px)';
-          });
-        });
+        root.style.setProperty('--ripple-x', x + 'px');
+        root.style.setProperty('--ripple-y', y + 'px');
 
         icon.classList.add('spinning');
 
-        overlay.addEventListener('transitionend', function () {
+        var doSwitch = function () {
           root.setAttribute('data-theme', next);
           updateIcon(next);
-          icon.classList.remove('spinning');
           localStorage.setItem('theme', next);
-          overlay.remove();
-        }, { once: true });
+        };
+
+        if (document.startViewTransition) {
+          document.startViewTransition(doSwitch).finished.then(function () {
+            icon.classList.remove('spinning');
+          });
+        } else {
+          doSwitch();
+          icon.classList.remove('spinning');
+        }
       }
 
       updateIcon(getCurrentTheme());
